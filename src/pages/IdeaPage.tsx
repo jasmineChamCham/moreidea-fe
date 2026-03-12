@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, BookOpen, Palette, Loader2, Video } from "lucide-react";
+import { Sparkles, BookOpen, Palette, Loader2, Video, Brain, Mic, Zap, Clock } from "lucide-react";
 import { mentorsApi, Mentor } from "@/lib/mentors.api";
 
 export default function IdeaPage() {
@@ -100,7 +100,6 @@ Return ONLY valid JSON with this structure:
                   </Button>
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground mt-3">{mentor.style}</p>
             </CardContent>
           </Card>
 
@@ -166,39 +165,145 @@ Return ONLY valid JSON with this structure:
         </div>
 
         {/* Sidebar - Mentor Profile */}
-        <div className="space-y-6">
-          <Card className="glow-accent">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg font-display flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-accent" />
-                Mentor Profile
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {[
-                { label: "Archetype", value: mentor.archetype, icon: Sparkles },
-                { label: "Philosophy", value: mentor.philosophy, icon: Sparkles },
-                { label: "Mindset", value: mentor.mindset, icon: BookOpen },
-                { label: "Speaking Style", value: mentor.speakingStyle, icon: Video },
-                { label: "Body Language", value: mentor.bodyLanguage, icon: Palette },
-                { label: "Era", value: mentor.era, icon: BookOpen },
-              ].map((item, idx) => (
-                <div key={idx}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <item.icon className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{item.label}</span>
+        {/* Sidebar - Mentor Profile */}
+        <div className="space-y-4">
+          <div
+            className="overflow-hidden"
+            style={{
+              borderRadius: "1rem",
+              border: "1px solid hsl(225 12% 18%)",
+              backgroundColor: "hsl(225 13% 8%)",
+              boxShadow: "0 8px 32px hsl(260 45% 20% / 0.1), 0 2px 8px hsl(0 0% 0% / 0.4)",
+            }}
+          >
+            {/* 1. Cover banner */}
+            <div
+              style={{
+                height: "140px",
+                backgroundColor: "white",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "0 1.5rem",
+                textAlign: "center",
+                position: "relative",
+              }}
+            >
+              <p style={{ fontSize: "1.25rem", fontWeight: "600", color: "hsl(225 13% 8%)" }}>
+                The quickest way to become more confident is to become more competent.
+              </p>
+            </div>
+
+            {/* 2. Avatar + Identity Section */}
+            <div style={{ padding: "0 1.5rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: "-48px", marginBottom: "0.75rem" }}>
+                <div style={{ position: "relative" }}>
+                  {mentor.avatarUrl ? (
+                    <img
+                      src={mentor.avatarUrl}
+                      alt={mentor.name}
+                      className="rounded-full object-cover block"
+                      style={{
+                        width: "96px", height: "96px",
+                        border: "4px solid hsl(225 13% 8%)",
+                        backgroundColor: "hsl(225 13% 8%)"
+                      }}
+                    />
+                  ) : (
+                    <div
+                      className="rounded-full flex items-center justify-center"
+                      style={{
+                        width: "96px", height: "96px",
+                        background: "linear-gradient(135deg, hsl(260 45% 45%), hsl(195 50% 42%))",
+                        border: "4px solid hsl(225 13% 8%)",
+                      }}
+                    >
+                      <span className="text-4xl font-bold text-white tracking-tight">{mentor.name.charAt(0)}</span>
+                    </div>
+                  )}
+                </div>
+                {/* Optional Follow/Badge on right side */}
+                <div className="mb-2">
+                  <span className="px-3 py-1 bg-secondary rounded-full text-xs font-medium text-foreground border border-border">
+                    {mentor.archetype || "Mentor"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Name & Handle */}
+              <div style={{ marginBottom: "1rem" }}>
+                <div className="flex items-center gap-1.5">
+                  <h3 className="font-display font-bold text-xl text-foreground tracking-tight" style={{ lineHeight: 1.1 }}>
+                    {mentor.name}
+                  </h3>
+                  <div className="text-blue-400 bg-blue-400/10 p-0.5 rounded-full" title="Verified Mentor">
+                    <Sparkles className="w-3.5 h-3.5" />
                   </div>
-                  <p className="text-sm text-secondary-foreground">{item.value || "—"}</p>
                 </div>
-              ))}
+
+                {mentor.archetype && (
+                  <p className="text-muted-foreground text-sm mt-1">
+                    @{mentor.archetype.toLowerCase().replace(/[^a-z0-g]/g, "")}
+                  </p>
+                )}
+              </div>
+
+              {/* 3. Bio Section */}
               {mentor.bio && (
-                <div className="pt-2 border-t border-border/50">
-                  <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider">Bio</p>
-                  <p className="text-sm text-secondary-foreground line-clamp-4">{mentor.bio}</p>
-                </div>
+                <p className="text-sm text-foreground/85 leading-relaxed mb-5 line-clamp-3">
+                  {mentor.bio}
+                </p>
               )}
-            </CardContent>
-          </Card>
+
+              {/* 4. Profile Stats Row */}
+              <div className="flex gap-6 mb-5">
+                <div className="flex flex-col">
+                  <span className="text-foreground font-semibold text-sm">
+                    Field
+                  </span>
+                  <span className="text-xs text-muted-foreground font-medium">
+                    {mentor.style ? mentor.style.split(',')[0].trim() : "General"}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-foreground font-semibold text-sm">
+                    Type
+                  </span>
+                  <span className="text-xs text-muted-foreground font-medium">
+                    {mentor.archetype || ""}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 5. Divider */}
+            <div className="h-px bg-border/60 w-full mb-4" />
+
+            {/* 6. Profile Details Section */}
+            <div style={{ padding: "0 1.5rem 1.5rem" }}>
+              <div className="space-y-4">
+                {([
+                  { label: "Philosophy", value: mentor.philosophy, icon: Brain },
+                  { label: "Mindset", value: mentor.mindset, icon: Sparkles },
+                  { label: "Speaking Style", value: mentor.speakingStyle, icon: Mic },
+                  { label: "Body Language", value: mentor.bodyLanguage, icon: Zap },
+                  { label: "Tags", value: mentor.style?.split(',').map(s => s.trim()).join(' · '), icon: Palette },
+                ] as const).filter(item => item.value).map((item, idx) => (
+                  <div key={idx} className="flex gap-3 items-start">
+                    <div className="mt-0.5 mt-1 text-muted-foreground">
+                      <item.icon className="w-4 h-4" strokeWidth={2.5} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground tracking-tight leading-none mb-1">{item.label}</p>
+                      <p className="text-[0.85rem] text-muted-foreground leading-relaxed">
+                        {item.value}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

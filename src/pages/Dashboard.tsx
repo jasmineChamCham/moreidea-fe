@@ -223,38 +223,110 @@ Return ONLY valid JSON with this structure:
 
             {/* Mentor Profile */}
             {mentor && (
-              <Card className="glow-accent">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg font-display flex items-center gap-2">
-                    <BookOpen className="h-5 w-5 text-accent" />
-                    Mentor Profile
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {[
-                    { label: "Archetype", value: mentor.archetype, icon: Sparkles },
-                    { label: "Philosophy", value: mentor.philosophy, icon: Sparkles },
-                    { label: "Mindset", value: mentor.mindset, icon: BookOpen },
-                    { label: "Speaking Style", value: mentor.speakingStyle, icon: Video },
-                    { label: "Body Language", value: mentor.bodyLanguage, icon: Palette },
-                    { label: "Era", value: mentor.era, icon: BookOpen },
-                  ].map((item, idx) => (
-                    <div key={idx}>
-                      <div className="flex items-center gap-2 mb-1">
-                        <item.icon className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{item.label}</span>
+              <div
+                className="glow-accent overflow-hidden"
+                style={{
+                  borderRadius: "0.75rem",
+                  border: "1px solid hsl(225 12% 16%)",
+                  backgroundColor: "hsl(225 13% 9%)",
+                }}
+              >
+                {/* Gradient Header + Avatar */}
+                <div className="mentor-profile-header">
+                  <div className="flex items-center gap-3">
+                    {mentor.avatarUrl ? (
+                      <div className="mentor-avatar-ring flex-shrink-0">
+                        <img
+                          src={mentor.avatarUrl}
+                          alt={mentor.name}
+                          className="rounded-full object-cover"
+                          style={{ width: "52px", height: "52px", display: "block" }}
+                        />
                       </div>
-                      <p className="text-sm text-secondary-foreground">{item.value || "—"}</p>
+                    ) : (
+                      <div
+                        className="flex-shrink-0 rounded-full flex items-center justify-center"
+                        style={{
+                          width: "52px",
+                          height: "52px",
+                          background: "linear-gradient(135deg, hsl(260 45% 40%), hsl(195 50% 40%))",
+                        }}
+                      >
+                        <span className="text-lg font-bold text-white">{mentor.name.charAt(0)}</span>
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <h3 className="font-display text-base font-semibold text-foreground truncate">
+                        {mentor.name}
+                      </h3>
+                      {mentor.archetype && (
+                        <p className="text-xs mt-0.5" style={{ color: "#a78bfa" }}>
+                          {mentor.archetype}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Profile Fields — glassmorphism pills */}
+                <div style={{ padding: "1rem 1.25rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  {[
+                    { label: "Philosophy", value: mentor.philosophy, icon: Sparkles, color: "#38bdf8" },
+                    { label: "Mindset", value: mentor.mindset, icon: BookOpen, color: "#34d399" },
+                    { label: "Speaking Style", value: mentor.speakingStyle, icon: Video, color: "#fbbf24" },
+                    { label: "Body Language", value: mentor.bodyLanguage, icon: Palette, color: "#f472b6" },
+                    { label: "Era", value: mentor.era, icon: BookOpen, color: "#fb923c" },
+                  ].map((item, idx) => (
+                    <div key={idx} className="mentor-field">
+                      <div className="flex items-center gap-2 mb-1">
+                        <item.icon className="h-3.5 w-3.5 flex-shrink-0" style={{ color: item.color }} />
+                        <span
+                          className="font-display"
+                          style={{
+                            fontSize: "0.6rem",
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.12em",
+                            color: item.color,
+                          }}
+                        >
+                          {item.label}
+                        </span>
+                      </div>
+                      <p className="text-sm font-medium text-foreground pl-5" style={{ opacity: 0.88 }}>
+                        {item.value || "—"}
+                      </p>
                     </div>
                   ))}
+
+                  {/* Bio */}
                   {mentor.bio && (
-                    <div className="pt-2 border-t border-border/50">
-                      <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider">Bio</p>
-                      <p className="text-sm text-secondary-foreground line-clamp-4">{mentor.bio}</p>
+                    <div
+                      className="mt-1 pt-3"
+                      style={{ borderTop: "1px solid hsl(225 12% 18% / 0.6)" }}
+                    >
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <BookOpen className="h-3.5 w-3.5 flex-shrink-0" style={{ color: "#22d3ee" }} />
+                        <span
+                          className="font-display"
+                          style={{
+                            fontSize: "0.6rem",
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.12em",
+                            color: "#22d3ee",
+                          }}
+                        >
+                          Bio
+                        </span>
+                      </div>
+                      <p className="text-sm leading-relaxed line-clamp-4" style={{ color: "#cffafe", opacity: 0.85 }}>
+                        {mentor.bio}
+                      </p>
                     </div>
                   )}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             )}
           </div>
         </div>

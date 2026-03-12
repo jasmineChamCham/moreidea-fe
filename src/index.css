@@ -79,4 +79,43 @@
     @apply bg-clip-text text-transparent;
     background-image: linear-gradient(135deg, hsl(210 60% 55%), hsl(195 50% 42%));
   }
+
+  /* Mentor Profile — color-tinted field card */
+  .mentor-field-card {
+    border-radius: 0.5rem;
+    padding: 0.75rem 0.875rem;
+    border-left: 3px solid var(--field-accent);
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+
+  .mentor-field-card:hover {
+    transform: translateX(2px);
+    filter: brightness(1.15);
+  }
+
+  /* Mentor Profile — header gradient bar */
+  .mentor-profile-header {
+    background: linear-gradient(135deg, hsl(260 45% 22% / 0.5), hsl(195 50% 25% / 0.5));
+    border-bottom: 1px solid hsl(225 12% 18% / 0.6);
+    padding: 1.25rem 1.5rem;
+  }
+
+  /* Mentor Profile — avatar ring (static gradient, no spin) */
+  .mentor-avatar-ring {
+    background: conic-gradient(
+      from 0deg,
+      hsl(260 50% 55% / 0.6),
+      hsl(195 50% 50% / 0.6),
+      hsl(340 45% 55% / 0.6),
+      hsl(30 50% 55% / 0.6),
+      hsl(260 50% 55% / 0.6)
+    );
+    border-radius: 50%;
+    padding: 2.5px;
+  }
+
+  /* Mentor Profile — bio section gradient border */
+  .mentor-bio-border {
+    border-image: linear-gradient(to right, hsl(195 50% 42% / 0.4), hsl(260 45% 50% / 0.4), transparent) 1;
+  }
 }
