@@ -3,6 +3,7 @@ import { api } from './api';
 export interface Mentor {
   id: string;
   name: string;
+  avatarUrl?: string;
   archetype?: string;
   philosophy?: string;
   mindset?: string;
@@ -34,5 +35,9 @@ export const mentorsApi = {
   },
   delete: async (id: string): Promise<void> => {
     await api.delete(`/mentors/${id}`);
+  },
+  generateData: async (name: string): Promise<Partial<Mentor>> => {
+    const { data } = await api.post('/mentors/generate', { name });
+    return data;
   },
 };

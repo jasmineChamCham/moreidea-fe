@@ -8,6 +8,7 @@ import IdeaPage from "./pages/IdeaPage";
 import FavouritesPage from "./pages/FavouritesPage";
 import GetIdeasPage from "./pages/GetIdeasPage";
 import SettingsPage from "./pages/Settings";
+import MentorsPage from "./pages/MentorsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/" element={<IdeaPage />} />
             <Route path="/favourites" element={<FavouritesPage />} />
             <Route path="/get-ideas" element={<GetIdeasPage />} />
+            <Route path="/mentors" element={<MentorsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

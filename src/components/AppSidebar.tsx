@@ -1,4 +1,4 @@
-import { Lightbulb, Heart, BookOpen, Settings } from "lucide-react";
+import { Lightbulb, Heart, BookOpen, Settings, Users } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 
@@ -16,9 +16,10 @@ import {
 } from "@/components/ui/sidebar";
 
 const items = [
-  { title: "Idea", url: "/", icon: Lightbulb },
-  { title: "Favourite Ideas", url: "/favourites", icon: Heart },
+  { title: "Generate Idea", url: "/", icon: Lightbulb },
+  { title: "Ideas", url: "/favourites", icon: Heart },
   { title: "Get Ideas", url: "/get-ideas", icon: BookOpen },
+  { title: "Mentors", url: "/mentors", icon: Users },
 ];
 
 export function AppSidebar() {
