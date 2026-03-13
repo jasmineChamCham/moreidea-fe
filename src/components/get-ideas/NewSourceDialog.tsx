@@ -14,7 +14,7 @@ interface NewSourceDialogProps {
 
 export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProps) {
   const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState<"book" | "video">("book");
+  const [tab, setTab] = useState<"book" | "video">("video");
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Book state
@@ -85,11 +85,11 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
         </DialogHeader>
         <Tabs value={tab} onValueChange={(v) => setTab(v as "book" | "video")} className="mt-2">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="book" className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" /> Book (PDF)
-            </TabsTrigger>
             <TabsTrigger value="video" className="flex items-center gap-2">
               <Video className="h-4 w-4" /> Video (Link)
+            </TabsTrigger>
+            <TabsTrigger value="book" className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4" /> Book (PDF)
             </TabsTrigger>
           </TabsList>
 
