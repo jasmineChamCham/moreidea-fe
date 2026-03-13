@@ -29,9 +29,14 @@ export const sourcesApi = {
     const { data } = await api.get('/sources');
     return data;
   },
-  
-  createVideoSource: async (sourceUrl: string, sourceTitle?: string): Promise<BookVideoSource> => {
-    const { data } = await api.post('/sources/video', { sourceUrl, sourceTitle });
+
+  createVideoSource: async (videoData: {
+    title: string;
+    url?: string;
+    description?: string;
+    subtitles?: string;
+  }): Promise<BookVideoSource> => {
+    const { data } = await api.post('/sources/video', videoData);
     return data;
   },
 

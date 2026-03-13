@@ -4,11 +4,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/AppLayout";
+import { AuthProvider } from "@/hooks/useAuth";
 import IdeaPage from "./pages/IdeaPage";
 import FavouritesPage from "./pages/FavouritesPage";
 import GetIdeasPage from "./pages/GetIdeasPage";
 import SettingsPage from "./pages/Settings";
 import MentorsPage from "./pages/MentorsPage";
+import LoginPage from "./pages/LoginPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,16 +21,12 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AppLayout>
+        <AuthProvider>
           <Routes>
-            <Route path="/" element={<IdeaPage />} />
-            <Route path="/favourites" element={<FavouritesPage />} />
-            <Route path="/get-ideas" element={<GetIdeasPage />} />
-            <Route path="/mentors" element={<MentorsPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/*" element={<AppLayout />} />
           </Routes>
-        </AppLayout>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

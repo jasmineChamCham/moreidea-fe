@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, Video, Plus, Loader2, Upload } from "lucide-react";
@@ -21,6 +22,9 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
 
   // Video state
   const [videoUrl, setVideoUrl] = useState("");
+  const [videoTitle, setVideoTitle] = useState("");
+  const [videoDescription, setVideoDescription] = useState("");
+  const [videoSubtitles, setVideoSubtitles] = useState("");
 
   const handleBookSubmit = async () => {
     if (!pdfFile) return;
@@ -32,7 +36,7 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
       setPdfFile(null);
       setOpen(false);
       onSourceCreated(source.id);
-    } catch (e: any) {
+    } catch (e) {
       console.error(e);
       toast.error(e.message || "Failed to process book");
     } finally {
@@ -41,16 +45,26 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
   };
 
   const handleVideoSubmit = async () => {
-    if (!videoUrl.trim()) return;
+    if (!videoTitle.trim()) return;
     setIsProcessing(true);
 
     try {
-      const source = await sourcesApi.createVideoSource(videoUrl.trim());
+      const videoData = {
+        title: videoTitle.trim(),
+        url: videoUrl.trim() || undefined,
+        description: videoDescription.trim() || undefined,
+        subtitles: videoSubtitles.trim() || undefined
+      };
+
+      const source = await sourcesApi.createVideoSource(videoData);
       toast.success(`Extracted ${source._count?.ideas || 0} ideas from "${source.sourceTitle}"`);
       setVideoUrl("");
+      setVideoTitle("");
+      setVideoDescription("");
+      setVideoSubtitles("");
       setOpen(false);
       onSourceCreated(source.id);
-    } catch (e: any) {
+    } catch (e) {
       console.error(e);
       toast.error(e.message || "Failed to process video");
     } finally {
@@ -124,7 +138,18 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
           <TabsContent value="video" className="space-y-4 mt-4">
             <div>
               <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                Video URL *
+                Video Title *
+              </label>
+              <Input
+                placeholder="Enter video title..."
+                value={videoTitle}
+                onChange={(e) => setVideoTitle(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-muted-foreground mb-2 block">
+                Video URL (Optional)
               </label>
               <Input
                 placeholder="Paste YouTube, Facebook, or Instagram link..."
@@ -135,10 +160,37 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
                 Supports YouTube, Facebook Reels, Instagram Reels, Shorts, etc.
               </p>
             </div>
+
+            <div>
+              <label className="text-sm font-medium text-muted-foreground mb-2 block">
+                Description (Optional)
+              </label>
+              <Input
+                placeholder="Enter video description..."
+                value={videoDescription}
+                onChange={(e) => setVideoDescription(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-muted-foreground mb-2 block">
+                Video Subtitles/Transcript (Optional)
+              </label>
+              <Textarea
+                placeholder="Paste video subtitles or transcript here..."
+                value={videoSubtitles}
+                onChange={(e) => setVideoSubtitles(e.target.value)}
+                rows={6}
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Paste the full transcript or subtitles of the video for better idea extraction
+              </p>
+            </div>
+
             <Button
               onClick={handleVideoSubmit}
               className="w-full font-display"
-              disabled={!videoUrl.trim() || isProcessing}
+              disabled={!videoTitle.trim() || isProcessing}
             >
               {isProcessing ? (
                 <>
