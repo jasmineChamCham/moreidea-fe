@@ -53,7 +53,7 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
 
     try {
       const source = await sourcesApi.createBookSource(pdfFile);
-      toast.success(`Extracted ${source._count?.ideas || 0} ideas from "${source.sourceTitle}"`);
+      toast.success(`Extracted ideas from "${source.sourceTitle}"`);
       setPdfFile(null);
       setOpen(false);
       onSourceCreated(source.id);
@@ -78,7 +78,7 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
       };
 
       const source = await sourcesApi.createVideoSource(videoData);
-      toast.success(`Extracted ${source._count?.ideas || 0} ideas from "${source.sourceTitle}"`);
+      toast.success(`Extracted ideas from "${source.sourceTitle}"`);
       setVideoUrl("");
       setVideoTitle("");
       setVideoDescription("");
