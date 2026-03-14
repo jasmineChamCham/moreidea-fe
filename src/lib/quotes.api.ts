@@ -1,12 +1,13 @@
 import { api } from './api';
+import { Mentor } from './mentors.api';
 
 export interface Quote {
   id: string;
-  mentor: string;
+  mentorId: string;
   quote: string;
-  place?: string;
   photoUrl?: string;
   createdAt: string;
+  mentor: Mentor;
 }
 
 export const quotesApi = {
@@ -20,6 +21,10 @@ export const quotesApi = {
   },
   delete: async (id: string): Promise<void> => {
     await api.delete(`/quotes/${id}`);
+  },
+  generateFromImage: async (imageUrl: string): Promise<{ quote: string }> => {
+    const { data } = await api.post('/quotes/generate-from-image', { imageUrl });
+    return data;
   },
 };
 

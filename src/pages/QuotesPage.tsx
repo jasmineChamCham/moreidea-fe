@@ -15,8 +15,8 @@ export default function QuotesPage() {
   const [open, setOpen] = useState(false);
   const [selectedMentorId, setSelectedMentorId] = useState("");
   const [quote, setQuote] = useState("");
-  const [place, setPlace] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
+  const [isGeneratingQuote, setIsGeneratingQuote] = useState(false);
 
   const fetchQuotes = async () => {
     try {
@@ -47,12 +47,11 @@ export default function QuotesPage() {
     if (!selectedMentorId || !quote.trim()) return;
     try {
       await quotesApi.create({
-        mentor: selectedMentor?.name || "",
+        mentorId: selectedMentorId,
         quote: quote.trim(),
-        place: place.trim() || undefined,
         photoUrl: photoUrl.trim() || undefined,
       });
-      setSelectedMentorId(""); setQuote(""); setPlace(""); setPhotoUrl("");
+      setSelectedMentorId(""); setQuote(""); setPhotoUrl("");
       setOpen(false);
       fetchQuotes();
     } catch (err) {
@@ -66,6 +65,25 @@ export default function QuotesPage() {
       fetchQuotes();
     } catch (err) {
       console.error("Failed to delete quote", err);
+    }
+  };
+
+  const handleGenerateQuote = async () => {
+    if (!photoUrl.trim()) return;
+
+    setIsGeneratingQuote(true);
+    try {
+      const result = await quotesApi.generateFromImage(photoUrl.trim());
+      if (result.quote && result.quote !== "No quote found in this image") {
+        setQuote(result.quote);
+      } else {
+        alert("No quote found in this image. Please try another image.");
+      }
+    } catch (err) {
+      console.error("Failed to generate quote from image", err);
+      alert("Failed to generate quote from image. Please check the URL and try again.");
+    } finally {
+      setIsGeneratingQuote(false);
     }
   };
 
@@ -118,12 +136,36 @@ export default function QuotesPage() {
                 <Textarea placeholder="The quote that inspired you..." value={quote} onChange={(e) => setQuote(e.target.value)} className="resize-none" />
               </div>
               <div>
-                <label className="text-sm font-medium text-white mb-1 block">Place (YouTube, Book, Instagram...)</label>
-                <Input placeholder="e.g. YouTube video link, Book name..." value={place} onChange={(e) => setPlace(e.target.value)} />
-              </div>
-              <div>
                 <label className="text-sm font-medium text-white mb-1 block">Photo URL (optional)</label>
-                <Input placeholder="Paste image URL..." value={photoUrl} onChange={(e) => setPhotoUrl(e.target.value)} />
+                <div className="space-y-2">
+                  <Input placeholder="Paste image URL..." value={photoUrl} onChange={(e) => setPhotoUrl(e.target.value)} />
+                  {photoUrl && (
+                    <Button
+                      onClick={handleGenerateQuote}
+                      variant="outline"
+                      size="sm"
+                      disabled={isGeneratingQuote}
+                      className="w-full"
+                    >
+                      {isGeneratingQuote ? "Generating..." : "Generate Quote from Image"}
+                    </Button>
+                  )}
+                  {photoUrl && (
+                    <div className="mt-2">
+                      <img
+                        src={photoUrl}
+                        alt="Quote preview"
+                        className="rounded-md max-h-40 object-cover w-full"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                        onLoad={(e) => {
+                          e.currentTarget.style.display = 'block';
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
               <Button onClick={handleAdd} className="w-full font-display" disabled={!selectedMentorId || !quote.trim()}>
                 Save Quote
@@ -146,7 +188,7 @@ export default function QuotesPage() {
           <Card key={quote.id} className="group">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
-                <CardTitle className="text-base font-display">{quote.mentor}</CardTitle>
+                <CardTitle className="text-base font-display">{quote.mentor.name}</CardTitle>
                 <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8" onClick={() => handleDelete(quote.id)}>
                   <Trash2 className="h-4 w-4 text-destructive" />
                 </Button>
@@ -154,12 +196,6 @@ export default function QuotesPage() {
             </CardHeader>
             <CardContent className="space-y-2">
               <p className="text-sm italic text-secondary-foreground border-l-2 border-primary/30 pl-3">"{quote.quote}"</p>
-              {quote.place && (
-                <p className="text-xs text-muted-foreground flex items-center gap-1">
-                  <ExternalLink className="h-3 w-3" />
-                  {quote.place}
-                </p>
-              )}
               {quote.photoUrl && (
                 <img src={quote.photoUrl} alt="Reference" className="rounded-md mt-2 max-h-40 object-cover w-full" />
               )}

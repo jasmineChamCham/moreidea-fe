@@ -118,4 +118,31 @@
   .mentor-bio-border {
     border-image: linear-gradient(to right, hsl(195 50% 42% / 0.4), hsl(260 45% 50% / 0.4), transparent) 1;
   }
+
+  /* Textarea improvements */
+  textarea {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(225 12% 25%) hsl(225 12% 16%);
+  }
+
+  textarea::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  textarea::-webkit-scrollbar-track {
+    background: hsl(225 12% 16%);
+    border-radius: 4px;
+  }
+
+  textarea::-webkit-scrollbar-thumb {
+    background: hsl(225 12% 25%);
+    border-radius: 4px;
+  }
+
+  textarea::-webkit-scrollbar-thumb:hover {
+    background: hsl(225 12% 35%);
+  }
 }
