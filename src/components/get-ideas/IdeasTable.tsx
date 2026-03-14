@@ -5,7 +5,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { toast } from "sonner";
 import { Edit2, Trash2, Check, X, Plus, Star } from "lucide-react";
 import { sourcesApi, ExtractedIdea } from "@/lib/sources.api";
-import { favouritesApi } from "@/lib/favourites.api";
 
 type Idea = ExtractedIdea;
 
@@ -72,19 +71,6 @@ export default function IdeasTable({ ideas, sourceId, sourceCreator, sourceTitle
     }
   };
 
-  const handleFavourite = async (idea: Idea) => {
-    try {
-      await favouritesApi.create({
-        person: sourceCreator || "Unknown",
-        quote: idea.ideaText,
-        place: sourceTitle,
-      });
-      toast.success("Saved to Favourite Ideas ⭐");
-    } catch (error) {
-      toast.error("Failed to save to favourites");
-    }
-  };
-
   return (
     <div>
       <Table>
@@ -135,9 +121,6 @@ export default function IdeasTable({ ideas, sourceId, sourceCreator, sourceTitle
                   <TableCell className="text-sm text-muted-foreground">{idea.application || "—"}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{idea.example || "—"}</TableCell>
                   <TableCell className="text-right space-x-1">
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleFavourite(idea)} title="Save to Favourites">
-                      <Star className="h-4 w-4 text-yellow-500" />
-                    </Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleStartEdit(idea)}>
                       <Edit2 className="h-4 w-4" />
                     </Button>

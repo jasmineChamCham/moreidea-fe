@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import IdeaPage from "../pages/IdeaPage";
-import FavouritesPage from "../pages/FavouritesPage";
+import QuotesPage from "../pages/QuotesPage";
 import GetIdeasPage from "../pages/GetIdeasPage";
 import SettingsPage from "../pages/Settings";
 import MentorsPage from "../pages/MentorsPage";
@@ -43,7 +43,7 @@ export function AppLayout() {
               <DevModeBanner />
               <Routes>
                 <Route path="/" element={<IdeaPage />} />
-                <Route path="/favourites" element={<FavouritesPage />} />
+                <Route path="/quotes" element={<QuotesPage />} />
                 <Route path="/get-ideas" element={<GetIdeasPage />} />
                 <Route path="/mentors" element={<MentorsPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
@@ -95,10 +95,10 @@ export function AppLayout() {
               </DropdownMenu>
             </div>
           </header>
-          <main className="flex-1 overflow-auto">
+          <main className="flex-1 overflow-auto p-4">
             <Routes>
               <Route path="/" element={<IdeaPage />} />
-              <Route path="/favourites" element={<FavouritesPage />} />
+              <Route path="/quotes" element={<QuotesPage />} />
               <Route path="/get-ideas" element={<GetIdeasPage />} />
               <Route path="/mentors" element={<MentorsPage />} />
               <Route path="/settings" element={<SettingsPage />} />

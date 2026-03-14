@@ -5,10 +5,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, Plus, Trash2, ExternalLink } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { favouritesApi, FavouriteIdea } from "@/lib/favourites.api";
+import { ideasApi, Idea } from "@/lib/ideas.api";
 
-export default function FavouritesPage() {
-  const [ideas, setIdeas] = useState<FavouriteIdea[]>([]);
+export default function IdeasPage() {
+  const [ideas, setIdeas] = useState<Idea[]>([]);
   const [open, setOpen] = useState(false);
   const [person, setPerson] = useState("");
   const [quote, setQuote] = useState("");
@@ -17,10 +17,10 @@ export default function FavouritesPage() {
 
   const fetchIdeas = async () => {
     try {
-      const data = await favouritesApi.getAll();
+      const data = await ideasApi.getAll();
       setIdeas(data);
     } catch (err) {
-      console.error("Failed to fetch favourites", err);
+      console.error("Failed to fetch ideas", err);
     }
   };
 
@@ -29,7 +29,7 @@ export default function FavouritesPage() {
   const handleAdd = async () => {
     if (!person.trim() || !quote.trim()) return;
     try {
-      await favouritesApi.create({
+      await ideasApi.create({
         person: person.trim(),
         quote: quote.trim(),
         place: place.trim() || undefined,
@@ -39,16 +39,16 @@ export default function FavouritesPage() {
       setOpen(false);
       fetchIdeas();
     } catch (err) {
-      console.error("Failed to create favourite", err);
+      console.error("Failed to create idea", err);
     }
   };
 
   const handleDelete = async (id: string) => {
     try {
-      await favouritesApi.delete(id);
+      await ideasApi.delete(id);
       fetchIdeas();
     } catch (err) {
-      console.error("Failed to delete favourite", err);
+      console.error("Failed to delete idea", err);
     }
   };
 
@@ -57,7 +57,7 @@ export default function FavouritesPage() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-display flex items-center gap-2">
           <Heart className="h-6 w-6 text-primary" />
-          Favourite Ideas
+          Ideas
         </h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
@@ -68,7 +68,7 @@ export default function FavouritesPage() {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle className="font-display">Add Favourite Idea</DialogTitle>
+              <DialogTitle className="font-display">Add Idea</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-2">
               <div>
@@ -98,7 +98,7 @@ export default function FavouritesPage() {
       {ideas.length === 0 && (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
-            No favourite ideas yet. Click "Add Idea" to save your first one.
+            No ideas yet. Click "Add Idea" to save your first one.
           </CardContent>
         </Card>
       )}

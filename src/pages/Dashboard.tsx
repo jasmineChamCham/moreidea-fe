@@ -6,7 +6,7 @@ import { Sparkles, BookOpen, Palette, Settings, Loader2, Quote, Video } from "lu
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import { mentorsApi, Mentor } from "@/lib/mentors.api";
-import { quotesApi, MentorQuote } from "@/lib/quotes.api";
+import { MentorQuote, mentorQuotesApi } from "@/lib/quotes.api";
 
 export default function Dashboard() {
   const [mentors, setMentors] = useState<Mentor[]>([]);
@@ -35,7 +35,7 @@ export default function Dashboard() {
     const fetchQuotes = async () => {
       if (!selectedMentorId) return;
       try {
-        const data = await quotesApi.getByMentorId(selectedMentorId);
+        const data = await mentorQuotesApi.getByMentorId(selectedMentorId);
         setQuotes(data);
       } catch (err) {
         console.error("Failed to fetch quotes", err);

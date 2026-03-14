@@ -5,13 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/AppLayout";
 import { AuthProvider } from "@/hooks/useAuth";
-import IdeaPage from "./pages/IdeaPage";
-import FavouritesPage from "./pages/FavouritesPage";
-import GetIdeasPage from "./pages/GetIdeasPage";
-import SettingsPage from "./pages/Settings";
-import MentorsPage from "./pages/MentorsPage";
 import LoginPage from "./pages/LoginPage";
-import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 

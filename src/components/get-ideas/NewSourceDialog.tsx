@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, Video, Plus, Loader2, Upload } from "lucide-react";
 import { sourcesApi } from "@/lib/sources.api";
+import { mentorsApi, Mentor } from "@/lib/mentors.api";
 import { toast } from "sonner";
 
 interface NewSourceDialogProps {
@@ -16,6 +18,8 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"book" | "video">("video");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [mentors, setMentors] = useState<Mentor[]>([]);
+  const [selectedMentorId, setSelectedMentorId] = useState("");
 
   // Book state
   const [pdfFile, setPdfFile] = useState<File | null>(null);
@@ -25,6 +29,23 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
   const [videoTitle, setVideoTitle] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
   const [videoSubtitles, setVideoSubtitles] = useState("");
+
+  const fetchMentors = async () => {
+    try {
+      const data = await mentorsApi.getAll();
+      setMentors(data);
+    } catch (err) {
+      console.error("Failed to fetch mentors", err);
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      fetchMentors();
+    }
+  }, [open]);
+
+  const selectedMentor = mentors.find(m => m.id === selectedMentorId);
 
   const handleBookSubmit = async () => {
     if (!pdfFile) return;
@@ -83,6 +104,35 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
         <DialogHeader>
           <DialogTitle className="font-display">Add New Source</DialogTitle>
         </DialogHeader>
+
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm font-medium text-white mb-2 block">
+              Mentor *
+            </label>
+            <Select value={selectedMentorId} onValueChange={setSelectedMentorId}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a mentor" />
+              </SelectTrigger>
+              <SelectContent>
+                {mentors.map((mentor) => (
+                  <SelectItem key={mentor.id} value={mentor.id}>
+                    <div className="flex items-center gap-2">
+                      {mentor.avatarUrl && (
+                        <img
+                          src={mentor.avatarUrl}
+                          alt={mentor.name}
+                          className="w-6 h-6 rounded-full object-cover"
+                        />
+                      )}
+                      {mentor.name}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
         <Tabs value={tab} onValueChange={(v) => setTab(v as "book" | "video")} className="mt-2">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="video" className="flex items-center gap-2">
@@ -95,7 +145,7 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
 
           <TabsContent value="book" className="space-y-4 mt-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground mb-2 block">
+              <label className="text-sm font-medium text-white mb-2 block">
                 Upload PDF *
               </label>
               <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-primary/50 transition-colors bg-muted/30">
@@ -137,7 +187,7 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
 
           <TabsContent value="video" className="space-y-4 mt-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground mb-2 block">
+              <label className="text-sm font-medium text-white mb-2 block">
                 Video Title *
               </label>
               <Input
@@ -148,7 +198,7 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
             </div>
 
             <div>
-              <label className="text-sm font-medium text-muted-foreground mb-2 block">
+              <label className="text-sm font-medium text-white mb-2 block">
                 Video URL (Optional)
               </label>
               <Input
@@ -162,7 +212,7 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
             </div>
 
             <div>
-              <label className="text-sm font-medium text-muted-foreground mb-2 block">
+              <label className="text-sm font-medium text-white mb-2 block">
                 Description (Optional)
               </label>
               <Input
@@ -173,7 +223,7 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
             </div>
 
             <div>
-              <label className="text-sm font-medium text-muted-foreground mb-2 block">
+              <label className="text-sm font-medium text-white mb-2 block">
                 Video Subtitles/Transcript (Optional)
               </label>
               <Textarea

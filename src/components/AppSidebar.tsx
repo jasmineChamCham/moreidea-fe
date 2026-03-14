@@ -17,7 +17,7 @@ import {
 
 const items = [
   { title: "Generate Idea", url: "/", icon: Lightbulb },
-  { title: "Ideas", url: "/favourites", icon: Heart },
+  { title: "Quotes", url: "/quotes", icon: Heart },
   { title: "Get Ideas", url: "/get-ideas", icon: BookOpen },
   { title: "Mentors", url: "/mentors", icon: Users },
 ];
@@ -30,7 +30,7 @@ export function AppSidebar() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="offcanvas">
       <SidebarHeader className="p-4">
         {!collapsed ? (
           <span className="font-display text-xl font-bold tracking-tight gradient-text select-none">
