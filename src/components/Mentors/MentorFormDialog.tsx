@@ -76,7 +76,7 @@ export function MentorFormDialog({
       Object.keys(generatedData).forEach((key) => {
         // Only set the generated data; don't wipe name/avatarUrl
         if (key !== 'name' && key !== 'id' && key !== 'avatarUrl') {
-           setValue(key as keyof Mentor, generatedData[key as keyof Mentor]);
+          setValue(key as keyof Mentor, generatedData[key as keyof Mentor]);
         }
       });
       toast.success("Mentor data generated successfully!");
@@ -97,6 +97,19 @@ export function MentorFormDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {avatarUrl && (
+            <div className="flex justify-center my-4">
+              <img
+                src={avatarUrl}
+                alt="Avatar Preview"
+                className="w-32 h-32 rounded-full object-cover shadow-md border border-border"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Name</Label>
@@ -128,19 +141,6 @@ export function MentorFormDialog({
               />
             </div>
           </div>
-          
-          {avatarUrl && (
-            <div className="flex justify-center my-4">
-              <img 
-                src={avatarUrl} 
-                alt="Avatar Preview" 
-                className="w-32 h-32 rounded-full object-cover shadow-md border border-border" 
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                }}
-              />
-            </div>
-          )}
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">

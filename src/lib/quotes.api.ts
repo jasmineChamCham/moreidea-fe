@@ -19,6 +19,10 @@ export const quotesApi = {
     const { data } = await api.post('/quotes', payload);
     return data;
   },
+  update: async (id: string, payload: Partial<Quote>): Promise<Quote> => {
+    const { data } = await api.patch(`/quotes/${id}`, payload);
+    return data;
+  },
   delete: async (id: string): Promise<void> => {
     await api.delete(`/quotes/${id}`);
   },

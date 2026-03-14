@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, Plus, Trash2, ExternalLink } from "lucide-react";
+import { Heart, Plus, Trash2, ExternalLink, Edit } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { quotesApi, Quote } from "@/lib/quotes.api";
 import { mentorsApi, Mentor } from "@/lib/mentors.api";
@@ -17,6 +17,7 @@ export default function QuotesPage() {
   const [quote, setQuote] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
   const [isGeneratingQuote, setIsGeneratingQuote] = useState(false);
+  const [editingQuote, setEditingQuote] = useState<Quote | null>(null);
 
   const fetchQuotes = async () => {
     try {
@@ -68,6 +69,40 @@ export default function QuotesPage() {
     }
   };
 
+  const handleEdit = (quote: Quote) => {
+    setEditingQuote(quote);
+    setSelectedMentorId(quote.mentorId);
+    setQuote(quote.quote);
+    setPhotoUrl(quote.photoUrl || "");
+    setOpen(true);
+  };
+
+  const handleUpdate = async () => {
+    if (!editingQuote || !quote.trim()) return;
+    try {
+      await quotesApi.update(editingQuote.id, {
+        quote: quote.trim(),
+        photoUrl: photoUrl.trim() || undefined,
+      });
+      setEditingQuote(null);
+      setSelectedMentorId(""); setQuote(""); setPhotoUrl("");
+      setOpen(false);
+      fetchQuotes();
+    } catch (err) {
+      console.error("Failed to update quote", err);
+    }
+  };
+
+  const handleDialogClose = (open: boolean) => {
+    if (!open) {
+      setEditingQuote(null);
+      setSelectedMentorId("");
+      setQuote("");
+      setPhotoUrl("");
+    }
+    setOpen(open);
+  };
+
   const handleGenerateQuote = async () => {
     if (!photoUrl.trim()) return;
 
@@ -94,7 +129,7 @@ export default function QuotesPage() {
           <Heart className="h-6 w-6 text-primary" />
           Quotes
         </h1>
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={handleDialogClose}>
           <DialogTrigger asChild>
             <Button className="font-display">
               <Plus className="h-4 w-4" />
@@ -103,12 +138,14 @@ export default function QuotesPage() {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle className="font-display">Add Quote</DialogTitle>
+              <DialogTitle className="font-display">
+                {editingQuote ? "Edit Quote" : "Add Quote"}
+              </DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-2">
               <div>
                 <label className="text-sm font-medium text-white mb-1 block">Mentor *</label>
-                <Select value={selectedMentorId} onValueChange={setSelectedMentorId}>
+                <Select value={selectedMentorId} onValueChange={setSelectedMentorId} disabled={!!editingQuote}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a mentor" />
                   </SelectTrigger>
@@ -167,8 +204,12 @@ export default function QuotesPage() {
                   )}
                 </div>
               </div>
-              <Button onClick={handleAdd} className="w-full font-display" disabled={!selectedMentorId || !quote.trim()}>
-                Save Quote
+              <Button
+                onClick={editingQuote ? handleUpdate : handleAdd}
+                className="w-full font-display"
+                disabled={!selectedMentorId || !quote.trim()}
+              >
+                {editingQuote ? "Update Quote" : "Save Quote"}
               </Button>
             </div>
           </DialogContent>
@@ -189,9 +230,14 @@ export default function QuotesPage() {
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
                 <CardTitle className="text-base font-display">{quote.mentor.name}</CardTitle>
-                <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8" onClick={() => handleDelete(quote.id)}>
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
+                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(quote)}>
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDelete(quote.id)}>
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-2">
