@@ -8,6 +8,8 @@ import QuotesPage from "../pages/QuotesPage";
 import GetIdeasPage from "../pages/GetIdeasPage";
 import SettingsPage from "../pages/Settings";
 import MentorsPage from "../pages/MentorsPage";
+import MentorDetailPage from "../pages/MentorDetailPage";
+import SourceDetailPage from "../pages/SourceDetailPage";
 import NotFound from "../pages/NotFound";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -46,6 +48,8 @@ export function AppLayout() {
                 <Route path="/quotes" element={<QuotesPage />} />
                 <Route path="/get-ideas" element={<GetIdeasPage />} />
                 <Route path="/mentors" element={<MentorsPage />} />
+                <Route path="/mentors/:id" element={<MentorDetailPage />} />
+                <Route path="/source/:id" element={<SourceDetailPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
@@ -101,6 +105,8 @@ export function AppLayout() {
               <Route path="/quotes" element={<QuotesPage />} />
               <Route path="/get-ideas" element={<GetIdeasPage />} />
               <Route path="/mentors" element={<MentorsPage />} />
+              <Route path="/mentors/:id" element={<MentorDetailPage />} />
+              <Route path="/source/:id" element={<SourceDetailPage />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

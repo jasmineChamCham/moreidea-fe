@@ -49,10 +49,18 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
 
   const handleBookSubmit = async () => {
     if (!pdfFile) return;
+    if (!selectedMentorId) {
+      toast.error("Please select a mentor");
+      return;
+    }
     setIsProcessing(true);
 
     try {
-      const source = await sourcesApi.createBookSource(pdfFile);
+      const source = await sourcesApi.createBookSource(
+        pdfFile,
+        selectedMentorId,
+        selectedMentor?.name
+      );
       toast.success(`Extracted ideas from "${source.sourceTitle}"`);
       setPdfFile(null);
       setOpen(false);
@@ -67,6 +75,10 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
 
   const handleVideoSubmit = async () => {
     if (!videoTitle.trim()) return;
+    if (!selectedMentorId) {
+      toast.error("Please select a mentor");
+      return;
+    }
     setIsProcessing(true);
 
     try {
@@ -74,7 +86,9 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
         title: videoTitle.trim(),
         url: videoUrl.trim() || undefined,
         description: videoDescription.trim() || undefined,
-        subtitles: videoSubtitles.trim() || undefined
+        subtitles: videoSubtitles.trim() || undefined,
+        mentorId: selectedMentorId,
+        creator: selectedMentor?.name
       };
 
       const source = await sourcesApi.createVideoSource(videoData);
@@ -171,7 +185,7 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
             <Button
               onClick={handleBookSubmit}
               className="w-full font-display"
-              disabled={!pdfFile || isProcessing}
+              disabled={!pdfFile || !selectedMentorId || isProcessing}
             >
               {isProcessing ? (
                 <>
@@ -240,7 +254,7 @@ export default function NewSourceDialog({ onSourceCreated }: NewSourceDialogProp
             <Button
               onClick={handleVideoSubmit}
               className="w-full font-display"
-              disabled={!videoTitle.trim() || isProcessing}
+              disabled={!videoTitle.trim() || !selectedMentorId || isProcessing}
             >
               {isProcessing ? (
                 <>

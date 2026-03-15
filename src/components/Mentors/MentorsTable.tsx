@@ -1,6 +1,7 @@
 import { Mentor } from "@/lib/mentors.api";
 import { Edit2, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -26,6 +27,7 @@ export function MentorsTable({
   onSuccess,
 }: MentorsTableProps) {
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const filteredMentors = mentors.filter((mentor) =>
     mentor.name.toLowerCase().includes(search.toLowerCase())
@@ -57,7 +59,11 @@ export function MentorsTable({
           </TableHeader>
           <TableBody>
             {filteredMentors.map((mentor) => (
-              <TableRow key={mentor.id}>
+              <TableRow
+                key={mentor.id}
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => navigate(`/mentors/${mentor.id}`)}
+              >
                 <TableCell>
                   <div className="flex items-center gap-3">
                     {mentor.avatarUrl ? (
@@ -79,7 +85,10 @@ export function MentorsTable({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => onEdit(mentor)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit(mentor);
+                      }}
                     >
                       <Edit2 className="h-4 w-4" />
                     </Button>
@@ -87,7 +96,8 @@ export function MentorsTable({
                       variant="ghost"
                       size="icon"
                       className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         if (
                           window.confirm(
                             "Are you sure you want to delete this mentor?"

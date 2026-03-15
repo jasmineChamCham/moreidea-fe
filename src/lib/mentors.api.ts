@@ -1,4 +1,7 @@
 import { api } from './api';
+import { Topic } from './topics.api';
+import { MentorQuote } from './quotes.api';
+import { BookVideoSource } from './sources.api';
 
 export interface Mentor {
   id: string;
@@ -16,6 +19,12 @@ export interface Mentor {
   updatedAt: string;
 }
 
+export interface MentorDetail extends Mentor {
+  topics: Topic[];
+  quotes: MentorQuote[];
+  sources: BookVideoSource[];
+}
+
 export const mentorsApi = {
   getAll: async (): Promise<Mentor[]> => {
     const { data } = await api.get('/mentors');
@@ -23,6 +32,10 @@ export const mentorsApi = {
   },
   getById: async (id: string): Promise<Mentor> => {
     const { data } = await api.get(`/mentors/${id}`);
+    return data;
+  },
+  getDetails: async (id: string): Promise<MentorDetail> => {
+    const { data } = await api.get(`/mentors/${id}/details`);
     return data;
   },
   create: async (payload: Partial<Mentor>): Promise<Mentor> => {

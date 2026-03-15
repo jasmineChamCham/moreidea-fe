@@ -48,7 +48,7 @@ export default function GetIdeasPage() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-display flex items-center gap-2">
           <BookOpen className="h-6 w-6 text-primary" />
-          Get Ideas
+          Extract Ideas
         </h1>
         <NewSourceDialog onSourceCreated={handleSourceCreated} />
       </div>

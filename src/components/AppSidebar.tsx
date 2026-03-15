@@ -18,7 +18,7 @@ import {
 const items = [
   { title: "Generate Idea", url: "/", icon: Lightbulb },
   { title: "Quotes", url: "/quotes", icon: Heart },
-  { title: "Get Ideas", url: "/get-ideas", icon: BookOpen },
+  { title: "Extract Ideas", url: "/get-ideas", icon: BookOpen },
   { title: "Mentors", url: "/mentors", icon: Users },
 ];
 

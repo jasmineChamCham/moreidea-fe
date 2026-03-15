@@ -18,6 +18,7 @@ export interface BookVideoSource {
   sourceTitle: string;
   sourceType: 'book' | 'video';
   creator?: string;
+  mentorId?: string;
   sourceUrl?: string;
   filePath?: string;
   createdAt: string;
@@ -35,14 +36,18 @@ export const sourcesApi = {
     url?: string;
     description?: string;
     subtitles?: string;
+    mentorId?: string;
+    creator?: string;
   }): Promise<BookVideoSource> => {
     const { data } = await api.post('/sources/video', videoData);
     return data;
   },
 
-  createBookSource: async (pdfFile: File): Promise<BookVideoSource> => {
+  createBookSource: async (pdfFile: File, mentorId?: string, creator?: string): Promise<BookVideoSource> => {
     const formData = new FormData();
     formData.append('file', pdfFile);
+    if (mentorId) formData.append('mentorId', mentorId);
+    if (creator) formData.append('creator', creator);
     const { data } = await apiUpload.post('/sources/book', formData);
     return data;
   },
