@@ -6,6 +6,7 @@ import { Routes, Route } from "react-router-dom";
 import IdeaPage from "../pages/IdeaPage";
 import QuotesPage from "../pages/QuotesPage";
 import GetIdeasPage from "../pages/GetIdeasPage";
+import CollectRelevantIdeasPage from "../pages/CollectRelevantIdeasPage";
 import SettingsPage from "../pages/Settings";
 import MentorsPage from "../pages/MentorsPage";
 import MentorDetailPage from "../pages/MentorDetailPage";
@@ -47,6 +48,7 @@ export function AppLayout() {
                 <Route path="/" element={<IdeaPage />} />
                 <Route path="/quotes" element={<QuotesPage />} />
                 <Route path="/get-ideas" element={<GetIdeasPage />} />
+                <Route path="/collect-relevant-ideas" element={<CollectRelevantIdeasPage />} />
                 <Route path="/mentors" element={<MentorsPage />} />
                 <Route path="/mentors/:id" element={<MentorDetailPage />} />
                 <Route path="/source/:id" element={<SourceDetailPage />} />
@@ -104,6 +106,7 @@ export function AppLayout() {
               <Route path="/" element={<IdeaPage />} />
               <Route path="/quotes" element={<QuotesPage />} />
               <Route path="/get-ideas" element={<GetIdeasPage />} />
+              <Route path="/collect-relevant-ideas" element={<CollectRelevantIdeasPage />} />
               <Route path="/mentors" element={<MentorsPage />} />
               <Route path="/mentors/:id" element={<MentorDetailPage />} />
               <Route path="/source/:id" element={<SourceDetailPage />} />
