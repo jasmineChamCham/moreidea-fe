@@ -2,11 +2,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { mentorsApi, MentorDetail } from "@/lib/mentors.api";
 import { MentorQuote } from "@/lib/quotes.api";
-import { ArrowLeft, BookOpen, MessageSquare, FolderOpen, Play, FileText, Calendar, Heart, Share2, X } from "lucide-react";
+import { ArrowLeft, BookOpen, MessageSquare, FolderOpen, FileText, Calendar, Users, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { VideoThumbnail } from "@/components/VideoThumbnail";
@@ -118,7 +117,7 @@ export default function MentorDetailPage() {
           )}
 
           {/* About Mentor Info - Horizontal Layout */}
-          {(mentor.bio || mentor.philosophy || mentor.mindset || mentor.era) && (
+          {(mentor.bio || mentor.philosophy || mentor.mindset || mentor.bodyLanguage) && (
             <div className="mt-8">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {mentor.bio && (
@@ -160,16 +159,24 @@ export default function MentorDetailPage() {
                     </CardContent>
                   </Card>
                 )}
-                {mentor.era && (
+                {mentor.bodyLanguage && (
                   <Card className="bg-gradient-to-br from-purple-500/5 to-purple-500/10 border-purple-500/20">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-2 mb-3">
                         <div className="h-8 w-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                          <Calendar className="h-4 w-4 text-purple-600" />
+                          <Users className="h-4 w-4 text-purple-600" />
                         </div>
-                        <span className="text-sm font-semibold text-purple-600">Era</span>
+                        <span className="text-sm font-semibold text-purple-600">Body Language</span>
                       </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{mentor.era}</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{mentor.bodyLanguage}</p>
+
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="h-8 w-8 rounded-lg bg-rose-500/20 flex items-center justify-center">
+                          <Volume2 className="h-4 w-4 text-rose-600" />
+                        </div>
+                        <span className="text-sm font-semibold text-rose-600">Speaking Style</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{mentor.speakingStyle}</p>
                     </CardContent>
                   </Card>
                 )}
@@ -181,15 +188,15 @@ export default function MentorDetailPage() {
 
       {/* Main Content */}
       <div className="container py-6 lg:py-10">
-        <Tabs defaultValue="quotes" className="w-full">
+        <Tabs defaultValue="sources" className="w-full">
           <TabsList className="grid w-full max-w-md grid-cols-2 mb-8">
-            <TabsTrigger value="quotes" className="flex items-center gap-2">
-              <MessageSquare className="h-4 w-4" />
-              Quotes ({mentor.quotes.length})
-            </TabsTrigger>
             <TabsTrigger value="sources" className="flex items-center gap-2">
               <FolderOpen className="h-4 w-4" />
               Sources ({mentor.sources.length})
+            </TabsTrigger>
+            <TabsTrigger value="quotes" className="flex items-center gap-2">
+              <MessageSquare className="h-4 w-4" />
+              Quotes ({mentor.quotes.length})
             </TabsTrigger>
           </TabsList>
 
