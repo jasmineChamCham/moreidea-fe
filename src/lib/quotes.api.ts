@@ -38,6 +38,7 @@ export interface MentorQuote {
   mentorId: string;
   quote: string;
   meaning?: string;
+  photoUrl?: string;
   createdAt: string;
 }
 

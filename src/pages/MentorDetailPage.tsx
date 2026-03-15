@@ -1,16 +1,21 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { mentorsApi, MentorDetail } from "@/lib/mentors.api";
-import { ArrowLeft, BookOpen, MessageSquare, FolderOpen, Play, FileText, Calendar, Heart, Share2 } from "lucide-react";
+import { MentorQuote } from "@/lib/quotes.api";
+import { ArrowLeft, BookOpen, MessageSquare, FolderOpen, Play, FileText, Calendar, Heart, Share2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { VideoThumbnail } from "@/components/VideoThumbnail";
+import { useState } from "react";
 
 export default function MentorDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [selectedQuote, setSelectedQuote] = useState<MentorQuote | null>(null);
 
   const { data: mentor, isLoading, error } = useQuery<MentorDetail>({
     queryKey: ["mentor", id, "details"],
@@ -199,48 +204,72 @@ export default function MentorDetailPage() {
                 </CardContent>
               </Card>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {mentor.quotes.map((quote) => (
-                  <Card key={quote.id} className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <blockquote className="text-lg leading-relaxed mb-3">
-                            {quote.quote}
+              <>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {mentor.quotes.map((quote) => (
+                    <Card
+                      key={quote.id}
+                      className="group cursor-pointer overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+                      onClick={() => setSelectedQuote(quote)}
+                    >
+                      <div className="aspect-square relative">
+                        {quote.photoUrl ? (
+                          <img
+                            src={quote.photoUrl}
+                            alt={quote.quote}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.src = `https://picsum.photos/seed/${quote.id}/400/400.jpg`;
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                            <div className="text-center p-4">
+                              <MessageSquare className="h-8 w-8 mx-auto mb-2 text-primary" />
+                              <p className="text-xs text-muted-foreground font-medium truncate">{quote.quote.substring(0, 30)}...</p>
+                            </div>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2 max-w-[80%]">
+                              <p className="text-xs font-medium text-center line-clamp-3">{quote.quote}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <CardContent className="p-3">
+                        <p className="text-sm font-medium truncate">{mentor.name}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Quote Popup Dialog */}
+                <Dialog open={!!selectedQuote} onOpenChange={() => setSelectedQuote(null)}>
+                  <DialogContent className="max-w-2xl">
+                    {selectedQuote && (
+                      <>
+                        <DialogHeader>
+                          <DialogTitle className="font-display">
+                            {mentor.name}
+                          </DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <blockquote className="text-lg italic text-secondary-foreground border-l-4 border-primary/30 pl-4 py-2">
+                            "{selectedQuote.quote}"
                           </blockquote>
-                          {quote.meaning && (
-                            <p className="text-sm text-muted-foreground italic">
-                              {quote.meaning}
-                            </p>
+                          {selectedQuote.meaning && (
+                            <div className="text-sm text-muted-foreground">
+                              <strong>Meaning:</strong> {selectedQuote.meaning}
+                            </div>
                           )}
                         </div>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-4 border-t">
-                        <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span className="text-xs font-medium text-primary">
-                              {mentor.name.charAt(0)}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium">{mentor.name}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-1">
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                            <Heart className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                            <Share2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                      </>
+                    )}
+                  </DialogContent>
+                </Dialog>
+              </>
             )}
           </TabsContent>
 
@@ -257,56 +286,76 @@ export default function MentorDetailPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {mentor.sources.map((source) => (
-                  <Card
-                    key={source.id}
-                    className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer"
-                    onClick={() => navigate(`/source/${source.id}`)}
-                  >
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center gap-3">
-                        <div className={`h-12 w-12 rounded-lg flex items-center justify-center ${source.sourceType === 'video'
-                          ? 'bg-red-100 text-red-600'
-                          : 'bg-blue-100 text-blue-600'
-                          }`}>
-                          {source.sourceType === 'video' ? (
-                            <Play className="h-6 w-6" />
-                          ) : (
-                            <FileText className="h-6 w-6" />
+                  <div key={source.id}>
+                    {source.sourceType === 'video' ? (
+                      <VideoThumbnail
+                        videoUrl={source.sourceUrl}
+                        title={source.sourceTitle}
+                        creator={source.creator}
+                        onClick={() => navigate(`/source/${source.id}`)}
+                      />
+                    ) : (
+                      <Card
+                        className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer"
+                        onClick={() => navigate(`/source/${source.id}`)}
+                      >
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="h-12 w-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
+                              <FileText className="h-6 w-6" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <Badge variant="default" className="text-xs mb-1">
+                                Book
+                              </Badge>
+                              <h3 className="font-semibold text-sm leading-tight truncate">
+                                {source.sourceTitle}
+                              </h3>
+                            </div>
+                          </div>
+                        </CardHeader>
+
+                        <CardContent className="pt-0">
+                          {source.creator && (
+                            <p className="text-sm text-muted-foreground mb-3">
+                              by {source.creator}
+                            </p>
                           )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <Badge
-                            variant={source.sourceType === 'video' ? 'destructive' : 'default'}
-                            className="text-xs mb-1"
-                          >
-                            {source.sourceType}
-                          </Badge>
-                          <h3 className="font-semibold text-sm leading-tight truncate">
-                            {source.sourceTitle}
-                          </h3>
-                        </div>
+
+                          {source._count?.ideas && (
+                            <div className="flex items-center justify-between pt-3 border-t">
+                              <span className="text-xs text-muted-foreground">
+                                {source._count.ideas} ideas extracted
+                              </span>
+                              <Button variant="ghost" size="sm" className="h-6 px-2 text-xs">
+                                View →
+                              </Button>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {/* Ideas count for videos */}
+                    {source.sourceType === 'video' && source._count?.ideas && (
+                      <div className="flex items-center justify-between pt-2 px-1">
+                        <span className="text-xs text-muted-foreground">
+                          {source._count.ideas} ideas extracted
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-xs"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/source/${source.id}`);
+                          }}
+                        >
+                          View →
+                        </Button>
                       </div>
-                    </CardHeader>
-
-                    <CardContent className="pt-0">
-                      {source.creator && (
-                        <p className="text-sm text-muted-foreground mb-3">
-                          by {source.creator}
-                        </p>
-                      )}
-
-                      {source._count?.ideas && (
-                        <div className="flex items-center justify-between pt-3 border-t">
-                          <span className="text-xs text-muted-foreground">
-                            {source._count.ideas} ideas extracted
-                          </span>
-                          <Button variant="ghost" size="sm" className="h-6 px-2 text-xs">
-                            View →
-                          </Button>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                    )}
+                  </div>
                 ))}
               </div>
             )}

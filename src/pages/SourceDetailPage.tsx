@@ -64,7 +64,7 @@ export default function SourceDetailPage() {
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
-        
+
         <div className="flex items-center gap-4">
           <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
             {source.sourceType === 'book' ? (
@@ -113,14 +113,13 @@ export default function SourceDetailPage() {
               </div>
               {source.sourceUrl && (
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">URL</label>
-                  <a 
-                    href={source.sourceUrl} 
-                    target="_blank" 
+                  <a
+                    href={source.sourceUrl}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary hover:underline break-all"
                   >
-                    {source.sourceUrl}
+                    Watch it!
                   </a>
                 </div>
               )}
@@ -151,39 +150,39 @@ export default function SourceDetailPage() {
                           {idea.ideaText}
                         </h4>
                       </div>
-                      
+
                       {(idea.core || idea.importance || idea.application || idea.example) && (
                         <Separator />
                       )}
-                      
+
                       {idea.core && (
                         <div>
                           <h5 className="font-medium text-sm text-primary mb-1">Core Concept</h5>
                           <p className="text-sm text-muted-foreground">{idea.core}</p>
                         </div>
                       )}
-                      
+
                       {idea.importance && (
                         <div>
                           <h5 className="font-medium text-sm text-primary mb-1">Importance</h5>
                           <p className="text-sm text-muted-foreground">{idea.importance}</p>
                         </div>
                       )}
-                      
+
                       {idea.application && (
                         <div>
                           <h5 className="font-medium text-sm text-primary mb-1">Application</h5>
                           <p className="text-sm text-muted-foreground">{idea.application}</p>
                         </div>
                       )}
-                      
+
                       {idea.example && (
                         <div>
                           <h5 className="font-medium text-sm text-primary mb-1">Example</h5>
                           <p className="text-sm text-muted-foreground">{idea.example}</p>
                         </div>
                       )}
-                      
+
                       <div className="text-xs text-muted-foreground pt-2 border-t">
                         Created: {new Date(idea.createdAt).toLocaleDateString()}
                       </div>
