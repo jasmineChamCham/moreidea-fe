@@ -237,13 +237,7 @@ export default function MentorDetailPage() {
                             </div>
                           </div>
                         )}
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2 max-w-[80%]">
-                              <p className="text-xs font-medium text-center line-clamp-3">{quote.quote}</p>
-                            </div>
-                          </div>
-                        </div>
+
                       </div>
                       <CardContent className="p-3">
                         <p className="text-sm font-medium truncate">{mentor.name}</p>
