@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Brain, User, MessageSquare, BookOpen, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,13 +9,21 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
 
+enum SearchContentType {
+  QUOTE = 'quote',
+  SOURCE_IDEA = 'source_idea'
+}
+
 interface SearchResult {
   id: string;
-  type: 'quote' | 'sourceIdea';
+  type: SearchContentType;
   quote?: string;
   ideaText?: string;
   core?: string;
   importance?: string;
+  application?: string;
+  example?: string;
+  mentorId: string;
   mentorName: string;
   style?: string;
   speakingStyle?: string;
@@ -23,9 +32,11 @@ interface SearchResult {
   sourceType?: string;
   similarity: number;
   createdAt: string;
+  sourceUrl?: string;
 }
 
 const CollectRelevantIdeasPage: React.FC = () => {
+  const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -127,9 +138,6 @@ const CollectRelevantIdeasPage: React.FC = () => {
             <h2 className="text-2xl font-semibold">
               Found {results.length} Relevant Items
             </h2>
-            <Badge variant="outline" className="text-sm">
-              Sorted by relevance
-            </Badge>
           </div>
 
           <div className="grid gap-4">
@@ -157,61 +165,64 @@ const CollectRelevantIdeasPage: React.FC = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <div className="text-lg font-medium">
-                      {result.type === 'quote' ? result.quote : result.ideaText}
-                    </div>
-
-                    {result.core && (
-                      <div className="bg-blue-50 p-3 rounded-lg">
-                        <span className="font-semibold text-blue-800">Core:</span> {result.core}
+                    {result.type === SearchContentType.SOURCE_IDEA && result.ideaText && (
+                      <div className="text-lg font-medium text-blue-900 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        {result.ideaText}
                       </div>
                     )}
 
-                    {result.importance && (
-                      <div className="bg-green-50 p-3 rounded-lg">
-                        <span className="font-semibold text-green-800">Importance:</span> {result.importance}
+                    {result.type === SearchContentType.QUOTE && result.quote && (
+                      <div className="text-lg font-medium">
+                        {result.quote}
+                      </div>
+                    )}
+
+                    {result.core && (
+                      <div className="bg-slate-100 p-3 rounded-lg border border-slate-200">
+                        <span className="font-semibold text-slate-900">Core:</span> <span className="text-slate-800">{result.core}</span>
+                      </div>
+                    )}
+
+                    {(result.importance || result.application) && (
+                      <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 space-y-2">
+                        {result.importance && (
+                          <div>
+                            <span className="font-semibold text-gray-900">Importance:</span> <span className="text-gray-800">{result.importance}</span>
+                          </div>
+                        )}
+                        {result.application && (
+                          <div>
+                            <span className="font-semibold text-gray-900">Application:</span> <span className="text-gray-800">{result.application}</span>
+                          </div>
+                        )}
                       </div>
                     )}
 
                     <Separator />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="font-semibold flex items-center gap-1">
-                          <User className="w-4 h-4" />
-                          Mentor:
-                        </span>{' '}
-                        {result.mentorName}
-                      </div>
-
-                      {result.style && (
-                        <div>
-                          <span className="font-semibold">Style:</span> {result.style}
-                        </div>
-                      )}
-
-                      {result.speakingStyle && (
-                        <div>
-                          <span className="font-semibold">Speaking Style:</span> {result.speakingStyle}
-                        </div>
-                      )}
-
-                      {result.bodyLanguage && (
-                        <div>
-                          <span className="font-semibold">Body Language:</span> {result.bodyLanguage}
-                        </div>
-                      )}
-
+                    <div className="flex items-center justify-between text-sm">
                       {result.sourceTitle && (
-                        <div className="md:col-span-2">
-                          <span className="font-semibold">Source:</span> {result.sourceTitle}
-                          {result.sourceType && (
-                            <Badge variant="outline" className="ml-2">
-                              {result.sourceType}
-                            </Badge>
-                          )}
+                        <div className="flex-1">
+                          <span className="font-semibold">Source:</span>{' '}
+                          <a
+                            href={result.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-yellow-600 hover:text-yellow-700 hover:underline"
+                          >
+                            {result.sourceTitle}
+                          </a>
                         </div>
                       )}
+                      <div className="flex items-center gap-2 ml-4">
+                        <button
+                          onClick={() => navigate(`/mentors/${result.mentorId}`)}
+                          className="inline-flex items-center gap-1 px-3 py-1 bg-slate-800 text-slate-300 text-sm font-medium rounded-full hover:bg-slate-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                        >
+                          <User className="w-3 h-3" />
+                          {result.mentorName}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
