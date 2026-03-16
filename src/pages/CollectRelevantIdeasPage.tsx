@@ -216,7 +216,7 @@ const CollectRelevantIdeasPage: React.FC = () => {
                       )}
                       <div className="flex items-center gap-2 ml-4">
                         <button
-                          onClick={() => navigate(`/mentors/${result.mentorId}`)}
+                          onClick={() => window.open(`/mentors/${result.mentorId}`, '_blank')}
                           className="inline-flex items-center gap-1 px-3 py-1 bg-slate-800 text-slate-300 text-sm font-medium rounded-full hover:bg-slate-700 transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <User className="w-3 h-3" />
