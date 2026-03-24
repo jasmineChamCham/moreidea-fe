@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Volume2, Maximize2 } from "lucide-react";
+import { Volume2, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
@@ -47,16 +47,8 @@ export function VideoPlayer({ isOpen, onClose, videoUrl, title }: VideoPlayerPro
       <DialogContent className="max-w-4xl w-full p-0 overflow-hidden">
         <div className="relative">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b bg-background/95 backdrop-blur-sm">
-            <h3 className="font-semibold truncate pr-4">{title}</h3>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="shrink-0"
-            >
-              <X className="h-4 w-4" />
-            </Button>
+          <div className="flex items-center justify-between p-4 border-b bg-background/95 backdrop-blur-sm pr-12">
+            <h3 className="font-semibold truncate">{title}</h3>
           </div>
 
           {/* Video Container */}
