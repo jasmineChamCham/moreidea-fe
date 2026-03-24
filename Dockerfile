@@ -1,39 +1,23 @@
-# ─── Stage 1: Builder ────────────────────────────────────────────────────────
-FROM node:20-alpine AS builder
+FROM node:20
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+# Install build tools for native modules
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies
-RUN npm install
+COPY package.json package-lock.json* ./
+
+RUN npm i
 
 # Copy the rest of the source
 COPY . .
 
-# Build the application
-RUN npm run build
-
-# ─── Stage 2: Production ─────────────────────────────────────────────────────
-FROM node:20-alpine AS production
-
-WORKDIR /app
-
-# Copy dependency files
-COPY package.json package-lock.json ./
-
-# Install production-only dependencies
-RUN npm install --omit=dev
-
-# Copy built output
-COPY --from=builder /app/dist ./dist
-
-# Copy other necessary files
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/index.html ./
-
 # Expose the port
 EXPOSE 8888
 
-# Start the application
-CMD ["npm", "run", "preview"]
+# Start the development server
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
