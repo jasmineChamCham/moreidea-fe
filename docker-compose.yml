@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # Backend API (NestJS)
+  backend:
+    build:
+      context: ./moreidea-be
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '5252:5252'
+    environment:
+      - DATABASE_URL=postgresql://postgres.jgrarzvjtfgjfazcilzt:tramTranJ4smine@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres
+      - DIRECT_URL=postgresql://postgres.jgrarzvjtfgjfazcilzt:tramTranJ4smine@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres
+      - QDRANT_URL=http://host.docker.internal:6333
+      - NODE_ENV=production
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Frontend (React with Vite)
+  frontend:
+    build:
+      context: ./moreidea-fe
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '8888:8888'
+    environment:
+      - VITE_API_URL=http://localhost:5252
+    depends_on:
+      - backend
