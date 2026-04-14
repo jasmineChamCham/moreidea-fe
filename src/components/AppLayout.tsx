@@ -11,6 +11,7 @@ import MentorsPage from "../pages/MentorsPage";
 import MentorDetailPage from "../pages/MentorDetailPage";
 import SourceDetailPage from "../pages/SourceDetailPage";
 import GeneratedContentPage from "../pages/GeneratedContentPage";
+import ContentsPage from "../pages/ContentsPage";
 import NotFound from "../pages/NotFound";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,7 @@ export function AppLayout() {
                 <Route path="/mentors/:id" element={<MentorDetailPage />} />
                 <Route path="/source/:id" element={<SourceDetailPage />} />
                 <Route path="/generated-content" element={<GeneratedContentPage />} />
+                <Route path="/contents" element={<ContentsPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
@@ -111,6 +113,7 @@ export function AppLayout() {
               <Route path="/mentors/:id" element={<MentorDetailPage />} />
               <Route path="/source/:id" element={<SourceDetailPage />} />
               <Route path="/generated-content" element={<GeneratedContentPage />} />
+              <Route path="/contents" element={<ContentsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
