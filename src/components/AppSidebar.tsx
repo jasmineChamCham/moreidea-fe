@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/sidebar";
 
 const items = [
-  { title: "Generate Idea", url: "/", icon: Lightbulb },
   { title: "Quotes", url: "/quotes", icon: Heart },
   { title: "Extract Ideas", url: "/get-ideas", icon: BookOpen },
   { title: "Collect Relevant Ideas", url: "/collect-relevant-ideas", icon: Brain },
@@ -62,19 +61,6 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isActive("/settings")}>
-              <NavLink to="/settings" end>
-                <Settings className="h-4 w-4" />
-                {!collapsed && <span>Settings</span>}
-              </NavLink>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
     </Sidebar>
   );
 }

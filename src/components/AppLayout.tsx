@@ -7,10 +7,10 @@ import IdeaPage from "../pages/IdeaPage";
 import QuotesPage from "../pages/QuotesPage";
 import GetIdeasPage from "../pages/GetIdeasPage";
 import CollectRelevantIdeasPage from "../pages/CollectRelevantIdeasPage";
-import SettingsPage from "../pages/Settings";
 import MentorsPage from "../pages/MentorsPage";
 import MentorDetailPage from "../pages/MentorDetailPage";
 import SourceDetailPage from "../pages/SourceDetailPage";
+import GeneratedContentPage from "../pages/GeneratedContentPage";
 import NotFound from "../pages/NotFound";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -52,7 +52,7 @@ export function AppLayout() {
                 <Route path="/mentors" element={<MentorsPage />} />
                 <Route path="/mentors/:id" element={<MentorDetailPage />} />
                 <Route path="/source/:id" element={<SourceDetailPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/generated-content" element={<GeneratedContentPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
@@ -110,7 +110,7 @@ export function AppLayout() {
               <Route path="/mentors" element={<MentorsPage />} />
               <Route path="/mentors/:id" element={<MentorDetailPage />} />
               <Route path="/source/:id" element={<SourceDetailPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/generated-content" element={<GeneratedContentPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
