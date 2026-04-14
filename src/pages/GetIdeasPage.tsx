@@ -89,7 +89,20 @@ export default function GetIdeasPage() {
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <CardTitle className="text-lg font-display flex items-center gap-2">
-                  {selectedSource.sourceTitle}
+                  {selectedSource.sourceType === "video" && selectedSource.sourceUrl ? (
+                    <a
+                      href={selectedSource.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline flex items-center gap-1"
+                      title="Open video URL"
+                    >
+                      {selectedSource.sourceTitle}
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  ) : (
+                    selectedSource.sourceTitle
+                  )}
                   <Badge variant="secondary" className="text-xs">
                     {selectedSource.sourceType === "book" ? "📖 Book" : "🎬 Video"}
                   </Badge>
@@ -98,16 +111,6 @@ export default function GetIdeasPage() {
                   <p className="text-sm text-muted-foreground">Creator: {selectedSource.creator}</p>
                 )}
               </div>
-              {selectedSource.sourceUrl && (
-                <a
-                  href={selectedSource.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-primary flex items-center gap-1 hover:underline"
-                >
-                  <ExternalLink className="h-3.5 w-3.5" /> Open Link
-                </a>
-              )}
             </div>
           </CardHeader>
           <CardContent>
