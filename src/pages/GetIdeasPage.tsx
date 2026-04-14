@@ -67,7 +67,7 @@ export default function GetIdeasPage() {
               {sources.map((s) => (
                 <SelectItem key={s.id} value={s.id}>
                   <span className="flex items-center gap-2">
-                    {s.source_type === "book" ? (
+                    {s.sourceType === "book" ? (
                       <BookOpen className="h-3.5 w-3.5 text-muted-foreground" />
                     ) : (
                       <Video className="h-3.5 w-3.5 text-muted-foreground" />
