@@ -52,7 +52,7 @@ export function VideoThumbnail({
   };
 
   const handleCardClick = () => {
-    if (!videoUrl && onClick) {
+    if (onClick) {
       onClick();
     }
   };
