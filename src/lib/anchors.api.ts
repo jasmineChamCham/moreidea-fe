@@ -5,6 +5,7 @@ export interface Anchor {
   content: string;
   category: string;
   createdAt: string;
+  relevanceScore?: number;
 }
 
 interface RelatedAnchorResponse {
@@ -33,6 +34,7 @@ export const anchorsApi = {
       content: anchor.payload.content,
       category: anchor.payload.category,
       createdAt: anchor.payload.createdAt,
+      relevanceScore: anchor.score,
     }));
   },
 };
