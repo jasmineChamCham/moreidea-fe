@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+import { api } from './api';
 
 export interface Anchor {
   id: string;
@@ -7,26 +7,32 @@ export interface Anchor {
   createdAt: string;
 }
 
+interface RelatedAnchorResponse {
+  id: string;
+  version: number;
+  score: number;
+  payload: {
+    text: string;
+    category: string;
+    content: string;
+    createdAt: string;
+    type: string;
+  };
+}
+
 export const anchorsApi = {
   getAll: async (): Promise<Anchor[]> => {
-    const response = await fetch(`${API_BASE}/anchors`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch anchors');
-    }
-    return response.json();
+    const response = await api.get('/anchors');
+    return response.data.anchors || [];
   },
 
   searchRelated: async (searchText: string): Promise<Anchor[]> => {
-    const response = await fetch(`${API_BASE}/anchors/search`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ searchText }),
-    });
-    if (!response.ok) {
-      throw new Error('Failed to search related anchors');
-    }
-    return response.json();
+    const response = await api.post('/anchors/search', { searchText });
+    return (response.data.relatedAnchors || []).map((anchor: RelatedAnchorResponse) => ({
+      id: anchor.id,
+      content: anchor.payload.content,
+      category: anchor.payload.category,
+      createdAt: anchor.payload.createdAt,
+    }));
   },
 };
