@@ -32,6 +32,13 @@ export function VideoThumbnail({
   const getYouTubeThumbnail = (url?: string) => {
     if (!url) return null;
 
+    // Handle YouTube shorts
+    const shortsMatch = url.match(/youtube\.com\/shorts\/([^&\n?#]+)/);
+    if (shortsMatch && shortsMatch[1]) {
+      return `https://img.youtube.com/vi/${shortsMatch[1]}/hqdefault.jpg`;
+    }
+
+    // Handle regular YouTube videos
     const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/);
     if (match && match[1]) {
       return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
