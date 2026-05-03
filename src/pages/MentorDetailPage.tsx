@@ -219,25 +219,10 @@ export default function MentorDetailPage() {
                       className="group cursor-pointer overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
                       onClick={() => setSelectedQuote(quote)}
                     >
-                      <div className="aspect-square relative">
-                        {quote.photoUrl ? (
-                          <img
-                            src={quote.photoUrl}
-                            alt={quote.quote}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.src = `https://picsum.photos/seed/${quote.id}/400/400.jpg`;
-                            }}
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
-                            <div className="text-center p-4">
-                              <MessageSquare className="h-8 w-8 mx-auto mb-2 text-primary" />
-                              <p className="text-xs text-muted-foreground font-medium truncate">{quote.quote.substring(0, 30)}...</p>
-                            </div>
-                          </div>
-                        )}
-
+                      <div className="aspect-square relative bg-white flex items-center justify-center p-4">
+                        <p className="text-black text-center text-sm font-medium leading-relaxed">
+                          {quote.quote.length > 100 ? `${quote.quote.substring(0, 500)}...` : quote.quote}
+                        </p>
                       </div>
                       <CardContent className="p-3">
                         <p className="text-sm font-medium truncate">{mentor.name}</p>
