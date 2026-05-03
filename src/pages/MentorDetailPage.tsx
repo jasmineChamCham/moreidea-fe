@@ -219,8 +219,8 @@ export default function MentorDetailPage() {
                       className="group cursor-pointer overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
                       onClick={() => setSelectedQuote(quote)}
                     >
-                      <div className="aspect-square relative bg-white flex items-center justify-center p-4">
-                        <p className="text-black text-center text-sm font-medium leading-relaxed">
+                      <div className="aspect-square relative bg-white flex items-center justify-center p-3">
+                        <p className="text-black text-center text-base font-medium leading-relaxed">
                           {quote.quote.length > 100 ? `${quote.quote.substring(0, 500)}...` : quote.quote}
                         </p>
                       </div>
